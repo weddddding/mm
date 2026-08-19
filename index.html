@@ -578,13 +578,19 @@ body.locked { overflow: hidden; }
         <p class="venue__addr">نرسیده به میدان جعفریه</p>
         <div class="venue__actions">
           <a class="btn btn--gold" id="mapBtn" target="_blank" rel="noopener"
-             href="https://www.google.com/maps/search/?api=1&query=%D8%AA%D8%A7%D9%84%D8%A7%D8%B1+%D8%AA%DA%86%D8%B1%D8%A7+%D8%A7%D9%86%D8%AF%DB%8C%D8%B4%D9%87">
+             href="https://maps.app.goo.gl/gAYXdGD15n9fiQbu9">
             <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
-            مشاهدهٔ مسیر
+            گوگل مپ
           </a>
-          <a class="btn btn--ghost" id="calBtn" href="#">
-            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-cal-add"/></svg>
-            افزودن به تقویم
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://nshn.ir/54rbvYw8IxLlO9">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            نشان
+          </a>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://balad.ir/p/6AWBLNRySSi8y4">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            بلد
           </a>
         </div>
       </div>
@@ -782,43 +788,6 @@ body.locked { overflow: hidden; }
   }
   tick();
   setInterval(tick, 1000);
-
-  /* ---------- Add-to-calendar (.ics) ---------- */
-  const calBtn = document.getElementById("calBtn");
-  if (calBtn) {
-    calBtn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const dt = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-      const start = new Date("2026-09-22T18:00:00+03:30");
-      const end = new Date("2026-09-22T22:00:00+03:30");
-      const ics = [
-        "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Wedding//FA//EN",
-        "BEGIN:VEVENT",
-        "UID:mohammad-maryam-1405@wedding",
-        "DTSTAMP:" + dt(new Date()),
-        "DTSTART:" + dt(start),
-        "DTEND:" + dt(end),
-        "SUMMARY:جشن عروسی محمد و مریم",
-        "DESCRIPTION:مفتخریم به میزبانی شما عزیزان",
-        "LOCATION:تالار تچرا، اندیشه، فاز یک، میدان صیاد شیرازی",
-        "END:VEVENT", "END:VCALENDAR",
-      ].join("\r\n");
-      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "wedding-mohammad-maryam.ics";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      const label = calBtn.childNodes[calBtn.childNodes.length - 1];
-      calBtn.classList.add("copied");
-      if (label) label.textContent = " به تقویم اضافه شد ✓";
-      setTimeout(() => {
-        calBtn.classList.remove("copied");
-        if (label) label.textContent = " افزودن به تقویم";
-      }, 2400);
-    });
-  }
 
   /* ---------- Falling leaves & blossoms (whole site) ---------- */
   if (!reduce) {
