@@ -95,8 +95,8 @@ body {
   transition: width .1s linear;
 }
 
-/* ============ Falling petals ============ */
-.petals { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+/* ============ Falling leaves (topmost, over splash + site) ============ */
+.petals { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
 /* ============ The glass card ============ */
 .card {
@@ -189,6 +189,7 @@ body {
 /* ============ POEM ============ */
 .poem { text-align: center; margin: clamp(22px, 6vw, 38px) auto; position: relative; z-index: 2; }
 .poem__line { font-size: clamp(.98rem, 4vw, 1.3rem); font-weight: 400; color: var(--ink); line-height: 2.2; white-space: nowrap; }
+.poem__line--calli { font-family: var(--f-calli); color: var(--gold-deep); font-size: clamp(1.35rem, 6vw, 2rem); line-height: 2.6; }
 @media (max-width: 400px) { .poem__line { white-space: normal; } }
 
 /* ============ COUNTDOWN (neumorphic soft tiles) ============ */
@@ -321,7 +322,10 @@ body.locked { overflow: hidden; }
   position: relative;
   display: inline-block; line-height: 0;
   cursor: pointer;
+  transition: transform 1s var(--ease), opacity .9s var(--ease);
+  animation: floatEnv 5.5s ease-in-out infinite;
 }
+@keyframes floatEnv { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.012); } }
 .env-img {
   display: block;
   height: 100dvh; width: auto;
@@ -330,14 +334,31 @@ body.locked { overflow: hidden; }
 .seal {
   position: absolute;
   left: 57.5%; top: 51%;
-  width: 22.75%; height: auto;
+  width: 31.85%; height: auto;
   transform: translate(-50%, -50%);
   cursor: pointer;
   user-select: none; -webkit-user-drag: none;
+  transition: transform .85s var(--ease), opacity .7s var(--ease);
+  animation: sealPulse 2.4s ease-in-out infinite;
 }
 .seal:focus-visible { outline: 2px solid #fff; }
-.envelope.breaking .seal { opacity: 0; transition: opacity .4s ease; }
-.envelope.opening { opacity: 0; transition: opacity .5s ease; }
+@keyframes sealPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%     { transform: translate(-50%,-50%) scale(1.06); }
+}
+
+/* 1) seal breaks free and slides off the envelope */
+.envelope.breaking { animation: none; }
+.envelope.breaking .seal {
+  animation: none;
+  transform: translate(-50%, 240%) rotate(34deg) scale(.9);
+  opacity: 0;
+}
+/* 2) envelope lifts away, revealing the site */
+.envelope.opening {
+  transform: scale(1.14) translateY(-2%);
+  opacity: 0;
+}
 
 /* ============ Responsive ============ */
 @media (max-width: 420px) {
@@ -361,9 +382,9 @@ body.locked { overflow: hidden; }
   <div class="splash" id="splash">
     <div class="splash__stage">
       <div class="envelope" id="envelope">
-        <img class="env-img" src="splash-envelope.png" alt="پاکت دعوت‌نامهٔ عروسی" draggable="false">
+        <img class="env-img" src="splash-envelope.webp" alt="پاکت دعوت‌نامهٔ عروسی" draggable="false">
         <!-- wax seal (the button) -->
-        <img class="seal" id="seal" src="splash-seal.png" alt="مُهر موم" role="button" tabindex="0" aria-label="باز کردن دعوت‌نامه" draggable="false">
+        <img class="seal" id="seal" src="splash-seal.webp" alt="مُهر موم" role="button" tabindex="0" aria-label="باز کردن دعوت‌نامه" draggable="false">
       </div>
     </div>
   </div>
@@ -425,7 +446,7 @@ body.locked { overflow: hidden; }
 
     <!-- ===== POEM ===== -->
     <section class="poem reveal" data-reveal>
-      <p class="poem__line">مطرب بگو که جهان شد به کام ما</p>
+      <p class="poem__line poem__line--calli">مطرب بگو که کارِ جهان شُد به کامِ ما</p>
       <p class="poem__line">ما را در این عاشقانه همراه باشید...</p>
     </section>
 
@@ -674,36 +695,35 @@ body.locked { overflow: hidden; }
     });
   }
 
-  /* ---------- Falling petals ---------- */
+  /* ---------- Falling leaves (whole site) ---------- */
   if (!reduce) {
     const canvas = document.getElementById("petals");
     const ctx = canvas.getContext("2d");
-    let W, H, petals;
-    // soft, minimal — near-white blush / cream
-    const COLORS = ["#f7ead6", "#f3e0cb", "#efd9c6", "#faf1e4"];
+    let W, H, leaves;
+    const GREENS = ["#9fb27e", "#aec293", "#8ba86a", "#c2cfa0", "#b7c98d"];
 
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      const count = Math.min(16, Math.round(W / 90)); // sparse
-      petals = Array.from({ length: count }, makePetal);
+      const count = Math.min(40, Math.round(W / 32));
+      leaves = Array.from({ length: count }, makeLeaf);
     }
-    function makePetal() {
-      const r = 4 + Math.random() * 6;
+    function makeLeaf() {
+      const r = 6 + Math.random() * 8;
       return {
         x: Math.random() * W,
         y: Math.random() * -H,
         r,
-        color: COLORS[(Math.random() * COLORS.length) | 0],
-        sway: 0.5 + Math.random() * 1,
-        speed: 0.25 + Math.random() * 0.55, // slower
+        color: GREENS[(Math.random() * GREENS.length) | 0],
+        sway: 0.7 + Math.random() * 1.3,
+        speed: 0.3 + Math.random() * 0.65,
         angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() - 0.5) * 0.02,
+        spin: (Math.random() - 0.5) * 0.04,
         phase: Math.random() * Math.PI * 2,
-        opacity: 0.28 + Math.random() * 0.3, // more translucent
+        opacity: 0.42 + Math.random() * 0.4,
       };
     }
-    function drawPetal(p) {
+    function drawLeaf(p) {
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.angle);
@@ -711,19 +731,26 @@ body.locked { overflow: hidden; }
       ctx.fillStyle = p.color;
       ctx.beginPath();
       ctx.moveTo(0, -p.r);
-      ctx.quadraticCurveTo(p.r, -p.r * 0.2, 0, p.r);
-      ctx.quadraticCurveTo(-p.r, -p.r * 0.2, 0, -p.r);
+      ctx.quadraticCurveTo(p.r * 0.85, 0, 0, p.r);
+      ctx.quadraticCurveTo(-p.r * 0.85, 0, 0, -p.r);
       ctx.fill();
+      ctx.globalAlpha = p.opacity * 0.55;
+      ctx.strokeStyle = "rgba(90,110,60,.9)";
+      ctx.lineWidth = Math.max(0.6, p.r * 0.08);
+      ctx.beginPath();
+      ctx.moveTo(0, -p.r * 0.85);
+      ctx.lineTo(0, p.r * 0.85);
+      ctx.stroke();
       ctx.restore();
     }
     function frame(t) {
       ctx.clearRect(0, 0, W, H);
-      for (const p of petals) {
+      for (const p of leaves) {
         p.y += p.speed;
         p.x += Math.sin(t * 0.001 + p.phase) * p.sway * 0.5;
         p.angle += p.spin;
-        if (p.y > H + 20) { p.y = -20; p.x = Math.random() * W; }
-        drawPetal(p);
+        if (p.y > H + 24) { p.y = -24; p.x = Math.random() * W; }
+        drawLeaf(p);
       }
       requestAnimationFrame(frame);
     }
