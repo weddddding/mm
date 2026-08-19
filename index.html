@@ -695,62 +695,72 @@ body.locked { overflow: hidden; }
     });
   }
 
-  /* ---------- Falling leaves (whole site) ---------- */
+  /* ---------- Falling leaves & blossoms (whole site) ---------- */
   if (!reduce) {
     const canvas = document.getElementById("petals");
     const ctx = canvas.getContext("2d");
-    let W, H, leaves;
-    const GREENS = ["#9fb27e", "#aec293", "#8ba86a", "#c2cfa0", "#b7c98d"];
+    let W, H, dpr = 1, items;
+
+    // Abstract watercolor-ish sprites in the site palette (self-contained SVG)
+    const SVGS = [
+      // sage leaf with midrib
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 3C31 12 31 27 20 37 9 27 9 12 20 3Z' fill='#a9bd8e'/><path d='M20 6v28' stroke='#7f9463' stroke-width='1.5' fill='none' stroke-linecap='round'/><path d='M20 16l6-4M20 22l-6-4M20 27l6-3' stroke='#7f9463' stroke-width='1' fill='none' stroke-linecap='round'/></svg>`,
+      // lighter tilted leaf
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M7 33C7 17 19 6 34 8 33 23 22 34 7 33Z' fill='#bccf9f'/><path d='M11 30C18 22 27 14 32 11' stroke='#8ba86a' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>`,
+      // 5-petal blush blossom, gold center
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#e3b9a6'><ellipse cx='20' cy='11' rx='5.4' ry='9'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(72 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(144 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(216 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(288 20 20)'/></g><circle cx='20' cy='20' r='4.4' fill='#dcc188'/></svg>`,
+      // 5-petal cream blossom, deep-gold center
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#f0dcc9'><ellipse cx='20' cy='12' rx='5' ry='8.4'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(72 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(144 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(216 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(288 20 20)'/></g><circle cx='20' cy='20' r='4' fill='#c19a45'/></svg>`,
+      // small 6-petal blush flower
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#d59f8c'><ellipse cx='20' cy='13' rx='4' ry='7.5'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(60 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(120 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(180 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(240 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(300 20 20)'/></g><circle cx='20' cy='20' r='3.4' fill='#f4ead8'/></svg>`,
+      // abstract rose swirl (gold-soft)
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='13' fill='#e7c9a2'/><path d='M20 12a8 8 0 1 1-7 4M20 15a5 5 0 1 1-4 2.4' fill='none' stroke='#b98f4e' stroke-width='1.5' stroke-linecap='round'/></svg>`,
+    ];
+    const sprites = SVGS.map((s) => {
+      const img = new Image();
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(s);
+      return img;
+    });
 
     function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      const count = Math.min(40, Math.round(W / 32));
-      leaves = Array.from({ length: count }, makeLeaf);
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(38, Math.round(W / 34));
+      items = Array.from({ length: count }, makeItem);
     }
-    function makeLeaf() {
-      const r = 6 + Math.random() * 8;
+    function makeItem() {
+      const flower = Math.random() < 0.42;               // ~mix of leaves & flowers
+      const sprite = flower ? 2 + ((Math.random() * 4) | 0) : ((Math.random() * 2) | 0);
       return {
         x: Math.random() * W,
         y: Math.random() * -H,
-        r,
-        color: GREENS[(Math.random() * GREENS.length) | 0],
-        sway: 0.7 + Math.random() * 1.3,
-        speed: 0.3 + Math.random() * 0.65,
+        size: (flower ? 16 : 15) + Math.random() * (flower ? 16 : 14),
+        sprite,
+        sway: 0.7 + Math.random() * 1.4,
+        speed: 0.28 + Math.random() * 0.6,
         angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() - 0.5) * 0.04,
+        spin: (Math.random() - 0.5) * 0.035,
         phase: Math.random() * Math.PI * 2,
-        opacity: 0.42 + Math.random() * 0.4,
+        opacity: 0.72 + Math.random() * 0.28,
       };
-    }
-    function drawLeaf(p) {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.globalAlpha = p.opacity;
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.moveTo(0, -p.r);
-      ctx.quadraticCurveTo(p.r * 0.85, 0, 0, p.r);
-      ctx.quadraticCurveTo(-p.r * 0.85, 0, 0, -p.r);
-      ctx.fill();
-      ctx.globalAlpha = p.opacity * 0.55;
-      ctx.strokeStyle = "rgba(90,110,60,.9)";
-      ctx.lineWidth = Math.max(0.6, p.r * 0.08);
-      ctx.beginPath();
-      ctx.moveTo(0, -p.r * 0.85);
-      ctx.lineTo(0, p.r * 0.85);
-      ctx.stroke();
-      ctx.restore();
     }
     function frame(t) {
       ctx.clearRect(0, 0, W, H);
-      for (const p of leaves) {
+      for (const p of items) {
         p.y += p.speed;
         p.x += Math.sin(t * 0.001 + p.phase) * p.sway * 0.5;
         p.angle += p.spin;
-        if (p.y > H + 24) { p.y = -24; p.x = Math.random() * W; }
-        drawLeaf(p);
+        if (p.y > H + 28) { p.y = -28; p.x = Math.random() * W; }
+        const img = sprites[p.sprite];
+        if (!img.complete || !img.naturalWidth) continue;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.globalAlpha = p.opacity;
+        ctx.drawImage(img, -p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
       }
       requestAnimationFrame(frame);
     }
