@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7efe2" />
+  <title>محمد و مریم | کارت دعوت عروسی</title>
+  <meta name="description" content="مفتخریم به میزبانی شما عزیزان در جشن عروسی محمد میرزایی و مریم نشاطی — ۳۱ شهریور ۱۴۰۵، تالار تچرا" />
+
+  <!-- Persian fonts: Vazirmatn (body) + Gulzar (Nastaliq calligraphy for the names) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Gulzar&family=Lalezar&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Preloader ===== -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__ring"></div>
+    <div class="preloader__monogram">
+      <span>م</span>
+      <svg class="preloader__heart" viewBox="0 0 32 29" width="34" height="30" aria-hidden="true">
+        <path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/>
+      </svg>
+      <span>م</span>
+    </div>
+    <div class="preloader__bar"><span></span></div>
+  </div>
+
+  <!-- ===== Scroll progress ===== -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ===== Falling petals canvas ===== -->
+  <canvas id="petals" class="petals" aria-hidden="true"></canvas>
+
+  <main class="card" id="card">
+
+    <!-- Decorative floral corners -->
+    <svg class="floral floral--tr" viewBox="0 0 200 200" aria-hidden="true">
+      <use href="#floral-spray"/>
+    </svg>
+    <svg class="floral floral--bl" viewBox="0 0 200 200" aria-hidden="true">
+      <use href="#floral-spray"/>
+    </svg>
+
+    <!-- ===== HERO : arched image ===== -->
+    <header class="hero reveal" data-reveal>
+      <div class="hero__arch">
+        <!-- Swap this SVG scene for a real photo:  <img src="couple.jpg" alt="محمد و مریم" class="hero__photo"> -->
+        <div class="hero__scene" role="img" aria-label="دستان عروس و داماد و دسته‌گل">
+          <div class="hero__glow"></div>
+          <svg class="hero__art" viewBox="0 0 420 360" aria-hidden="true">
+            <!-- baby's breath -->
+            <g class="art-babybreath">
+              <circle cx="120" cy="120" r="3.2"/><circle cx="138" cy="106" r="2.6"/>
+              <circle cx="104" cy="104" r="2.4"/><circle cx="150" cy="128" r="2.8"/>
+              <circle cx="300" cy="118" r="3.2"/><circle cx="284" cy="104" r="2.6"/>
+              <circle cx="318" cy="106" r="2.4"/><circle cx="270" cy="126" r="2.8"/>
+            </g>
+            <!-- greenery -->
+            <g class="art-leaves">
+              <path d="M210 300 C160 270 120 210 118 150" />
+              <path d="M210 300 C260 270 300 210 302 150" />
+              <path d="M210 300 C200 250 200 190 210 150" />
+              <ellipse cx="150" cy="205" rx="20" ry="8" transform="rotate(-38 150 205)"/>
+              <ellipse cx="270" cy="205" rx="20" ry="8" transform="rotate(38 270 205)"/>
+              <ellipse cx="176" cy="240" rx="16" ry="6" transform="rotate(-30 176 240)"/>
+              <ellipse cx="244" cy="240" rx="16" ry="6" transform="rotate(30 244 240)"/>
+            </g>
+            <!-- white tulips -->
+            <g class="art-tulips">
+              <g transform="translate(178 150)"><use href="#tulip"/></g>
+              <g transform="translate(242 150)"><use href="#tulip"/></g>
+              <g transform="translate(210 122) scale(1.12)"><use href="#tulip"/></g>
+            </g>
+            <!-- ribbon -->
+            <path class="art-ribbon" d="M186 298 q24 20 48 0 l-8 40 q-16 -12 -32 0 z"/>
+            <!-- two interlocked rings -->
+            <g class="art-rings" transform="translate(210 322)">
+              <circle class="ring ring--a" cx="-16" cy="0" r="26"/>
+              <circle class="ring ring--b" cx="16" cy="0" r="26"/>
+              <path class="ring-spark" d="M16 -30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="hero__arch-line" aria-hidden="true"></div>
+      </div>
+      <div class="hero__ornament" aria-hidden="true">
+        <svg viewBox="0 0 220 24"><use href="#divider"/></svg>
+      </div>
+    </header>
+
+    <!-- ===== NAMES ===== -->
+    <section class="names reveal" data-reveal>
+      <div class="names__row">
+        <h1 class="names__name" data-name>مریم</h1>
+        <span class="names__heart" aria-label="و">
+          <svg viewBox="0 0 32 29" width="30" height="27"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
+        </span>
+        <h1 class="names__name" data-name>محمد</h1>
+      </div>
+      <div class="names__family">
+        <span>نشاطی</span>
+        <span class="names__amp">و</span>
+        <span>میرزایی</span>
+      </div>
+    </section>
+
+    <!-- ===== POEM ===== -->
+    <section class="poem reveal" data-reveal>
+      <p class="poem__line">مطرب بگو که جهان شد به کام ما</p>
+      <p class="poem__line">ما را در این عاشقانه همراه باشید...</p>
+    </section>
+
+    <!-- ===== COUNTDOWN ===== -->
+    <section class="countdown reveal" data-reveal aria-label="زمان باقی‌مانده تا جشن">
+      <div class="cd__unit"><b id="cd-days">۰</b><span>روز</span></div>
+      <div class="cd__sep">:</div>
+      <div class="cd__unit"><b id="cd-hours">۰</b><span>ساعت</span></div>
+      <div class="cd__sep">:</div>
+      <div class="cd__unit"><b id="cd-min">۰</b><span>دقیقه</span></div>
+      <div class="cd__sep">:</div>
+      <div class="cd__unit"><b id="cd-sec">۰</b><span>ثانیه</span></div>
+    </section>
+
+    <!-- ===== DETAILS ===== -->
+    <section class="details reveal" data-reveal>
+      <div class="detail" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-clock"/></svg></span>
+        <b class="detail__title">ساعت</b>
+        <p class="detail__text">۱۸ الی ۲۲</p>
+      </div>
+      <div class="detail detail--mid" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-calendar"/></svg></span>
+        <b class="detail__title">۳۱</b>
+        <p class="detail__text">شهریور ۱۴۰۵</p>
+      </div>
+      <div class="detail" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-dish"/></svg></span>
+        <b class="detail__title">به صرف</b>
+        <p class="detail__text">شیرینی و شام</p>
+      </div>
+    </section>
+
+    <!-- ===== HOST LINE ===== -->
+    <section class="host reveal" data-reveal>
+      <p>مفتخریم به میزبانی شما عزیزان</p>
+      <span class="host__heart" aria-hidden="true">
+        <svg viewBox="0 0 32 29" width="20" height="18"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
+      </span>
+    </section>
+
+    <!-- ===== VENUE ===== -->
+    <section class="venue reveal" data-reveal>
+      <div class="venue__box">
+        <span class="venue__icon"><svg viewBox="0 0 48 48"><use href="#ic-hall"/></svg></span>
+        <h2 class="venue__name">تالار تچرا</h2>
+        <p class="venue__addr">اندیشه، فاز یک، میدان صیاد شیرازی</p>
+        <p class="venue__addr">نرسیده به میدان جعفریه</p>
+        <div class="venue__actions">
+          <a class="btn btn--gold" id="mapBtn" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&query=%D8%AA%D8%A7%D9%84%D8%A7%D8%B1+%D8%AA%DA%86%D8%B1%D8%A7+%D8%A7%D9%86%D8%AF%DB%8C%D8%B4%D9%87">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            مشاهدهٔ مسیر
+          </a>
+          <a class="btn btn--ghost" id="calBtn" href="#">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-cal-add"/></svg>
+            افزودن به تقویم
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="card__ornament" aria-hidden="true">
+      <svg viewBox="0 0 220 24"><use href="#divider"/></svg>
+    </div>
+
+    <footer class="foot reveal" data-reveal>
+      <p class="foot__names">مریم <span aria-hidden="true">♡</span> محمد</p>
+      <p class="foot__date">۳۱ شهریور ۱۴۰۵</p>
+    </footer>
+
+  </main>
+
+  <!-- ===== SVG symbol library ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- tulip bloom -->
+      <g id="tulip">
+        <path d="M0 40 C-16 34 -20 8 -14 -6 C-9 6 -4 8 0 8 C4 8 9 6 14 -6 C20 8 16 34 0 40 Z"/>
+        <path d="M0 8 C-6 6 -9 -8 -6 -20 C-2 -8 0 -6 0 -6 C0 -6 2 -8 6 -20 C9 -8 6 6 0 8 Z"/>
+      </g>
+
+      <!-- reusable floral spray for corners -->
+      <g id="floral-spray">
+        <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <path d="M10 10 C60 30 110 70 150 150"/>
+          <path d="M10 10 C40 40 55 60 60 70"/>
+          <path d="M60 70 C40 60 28 62 20 72"/>
+          <path d="M60 70 C68 48 66 36 76 26"/>
+          <path d="M95 95 C74 90 62 92 54 102"/>
+          <path d="M95 95 C104 74 102 62 112 52"/>
+          <path d="M130 128 C110 124 98 126 90 136"/>
+          <path d="M130 128 C139 108 137 96 147 86"/>
+        </g>
+        <g fill="currentColor" opacity=".9">
+          <path d="M150 150 c-14 -8 -20 -26 -14 -40 c14 6 22 24 14 40z" opacity=".55"/>
+          <ellipse cx="30" cy="34" rx="13" ry="6" transform="rotate(38 30 34)" opacity=".5"/>
+          <ellipse cx="70" cy="30" rx="12" ry="5.5" transform="rotate(-20 70 30)" opacity=".5"/>
+          <ellipse cx="66" cy="76" rx="11" ry="5" transform="rotate(30 66 76)" opacity=".45"/>
+          <ellipse cx="112" cy="60" rx="11" ry="5" transform="rotate(-22 112 60)" opacity=".45"/>
+          <circle cx="16" cy="60" r="3"/><circle cx="44" cy="86" r="2.6"/>
+          <circle cx="90" cy="40" r="2.6"/><circle cx="120" cy="96" r="2.6"/>
+        </g>
+        <!-- big blossom -->
+        <g transform="translate(150 150)" fill="currentColor">
+          <g opacity=".85">
+            <ellipse rx="15" ry="7" transform="rotate(0)"/>
+            <ellipse rx="15" ry="7" transform="rotate(60)"/>
+            <ellipse rx="15" ry="7" transform="rotate(120)"/>
+          </g>
+          <circle r="5" opacity=".9"/>
+        </g>
+      </g>
+
+      <!-- ornamental divider -->
+      <g id="divider" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+        <path d="M6 12 H86"/>
+        <path d="M134 12 H214"/>
+        <path d="M92 12 c6 -9 16 -9 18 0 c2 -9 12 -9 18 0 c-6 9 -16 9 -18 0 c-2 9 -12 9 -18 0 z" fill="currentColor" stroke="none"/>
+        <circle cx="86" cy="12" r="2" fill="currentColor" stroke="none"/>
+        <circle cx="134" cy="12" r="2" fill="currentColor" stroke="none"/>
+      </g>
+
+      <!-- icons -->
+      <g id="ic-clock" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="24" cy="24" r="16"/><path d="M24 15v9l6 4"/>
+      </g>
+      <g id="ic-calendar" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="12" width="30" height="27" rx="4"/><path d="M9 20h30M17 8v8M31 8v8"/>
+      </g>
+      <g id="ic-dish" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 30a14 8 0 0 1 28 0z"/><path d="M8 34h32"/><path d="M24 22V10M20 10c0 3 8 3 8 0"/>
+      </g>
+      <g id="ic-hall" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 40V20l14-9 14 9v20"/><path d="M6 40h36"/><rect x="20" y="28" width="8" height="12"/>
+        <path d="M16 20h2M30 20h2M16 26h2M30 26h2"/><path d="M24 11V6"/>
+      </g>
+      <g id="ic-pin" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22c5-5 8-8.5 8-12a8 8 0 1 0-16 0c0 3.5 3 7 8 12z"/><circle cx="12" cy="10" r="2.6"/>
+      </g>
+      <g id="ic-cal-add" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="6" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 4v4M15 4v4M12 13v5M9.5 15.5h5"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script src="script.js"></script>
+</body>
+</html>
