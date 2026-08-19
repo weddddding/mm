@@ -115,27 +115,28 @@
     const canvas = document.getElementById("petals");
     const ctx = canvas.getContext("2d");
     let W, H, petals;
-    const COLORS = ["#f6e2c0", "#efd6ad", "#e9c98f", "#f3ddb0", "#f7ead0"];
+    // soft, minimal — near-white blush / cream
+    const COLORS = ["#f7ead6", "#f3e0cb", "#efd9c6", "#faf1e4"];
 
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      const count = Math.min(38, Math.round(W / 34));
+      const count = Math.min(16, Math.round(W / 90)); // sparse
       petals = Array.from({ length: count }, makePetal);
     }
     function makePetal() {
-      const r = 5 + Math.random() * 7;
+      const r = 4 + Math.random() * 6;
       return {
         x: Math.random() * W,
         y: Math.random() * -H,
         r,
         color: COLORS[(Math.random() * COLORS.length) | 0],
-        sway: 0.6 + Math.random() * 1.2,
-        speed: 0.4 + Math.random() * 0.9,
+        sway: 0.5 + Math.random() * 1,
+        speed: 0.25 + Math.random() * 0.55, // slower
         angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() - 0.5) * 0.03,
+        spin: (Math.random() - 0.5) * 0.02,
         phase: Math.random() * Math.PI * 2,
-        opacity: 0.5 + Math.random() * 0.4,
+        opacity: 0.28 + Math.random() * 0.3, // more translucent
       };
     }
     function drawPetal(p) {
