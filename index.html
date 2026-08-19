@@ -16,17 +16,34 @@
 </head>
 <body>
 
-  <!-- ===== Preloader ===== -->
-  <div class="preloader" id="preloader" aria-hidden="true">
-    <div class="preloader__ring"></div>
-    <div class="preloader__monogram">
-      <span>م</span>
-      <svg class="preloader__heart" viewBox="0 0 32 29" width="34" height="30" aria-hidden="true">
-        <path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/>
-      </svg>
-      <span>م</span>
+  <!-- ===== Splash : sealed envelope ===== -->
+  <div class="splash" id="splash">
+    <div class="splash__stage">
+      <div class="envelope" id="envelope">
+        <!-- the letter that rises out -->
+        <div class="env-letter">
+          <div class="env-letter__mono">م&nbsp;<span>♥</span>&nbsp;م</div>
+          <div class="env-letter__sub">دعوت‌نامهٔ عروسی</div>
+          <div class="env-letter__date">۳۱ شهریور ۱۴۰۵</div>
+        </div>
+        <!-- envelope body -->
+        <div class="env-back"></div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <!-- wax seal (the button) -->
+        <button class="seal" id="seal" type="button" aria-label="باز کردن دعوت‌نامه">
+          <span class="seal__half seal__half--l"></span>
+          <span class="seal__half seal__half--r"></span>
+          <span class="seal__face">
+            <svg viewBox="0 0 32 29" width="30" height="27" aria-hidden="true"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
+          </span>
+          <span class="sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </span>
+        </button>
+      </div>
+      <p class="splash__hint" id="splashHint">برای باز کردن، مُهر را لمس کنید</p>
     </div>
-    <div class="preloader__bar"><span></span></div>
   </div>
 
   <!-- ===== Scroll progress ===== -->

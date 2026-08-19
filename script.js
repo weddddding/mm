@@ -8,11 +8,48 @@
   const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
   const toFa = (n) => String(n).replace(/\d/g, (d) => faDigits[d]);
 
-  /* ---------- Preloader ---------- */
-  window.addEventListener("load", () => {
-    const pre = document.getElementById("preloader");
-    setTimeout(() => pre && pre.classList.add("hide"), reduce ? 200 : 1700);
-  });
+  /* ---------- Splash : sealed envelope ---------- */
+  const splash = document.getElementById("splash");
+  const envelope = document.getElementById("envelope");
+  const seal = document.getElementById("seal");
+  const splashHint = document.getElementById("splashHint");
+
+  if (splash) {
+    document.body.classList.add("locked"); // lock scroll until opened
+    let opened = false;
+
+    const finish = () => {
+      splash.classList.add("revealing");
+      document.body.classList.remove("locked");
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        splash.style.display = "none";
+        splash.setAttribute("aria-hidden", "true");
+      }, 950);
+    };
+
+    const openInvitation = () => {
+      if (opened) return;
+      opened = true;
+
+      if (reduce) {
+        envelope.classList.add("opening");
+        finish();
+        return;
+      }
+      // 1) crack the wax seal (+ spark burst, hint fades)
+      splash.classList.add("breaking");
+      envelope.classList.add("breaking");
+      // 2) lift the flap and raise the letter
+      setTimeout(() => envelope.classList.add("opening"), 520);
+      // 3) reveal the site
+      setTimeout(finish, 1400);
+    };
+
+    seal.addEventListener("click", openInvitation);
+    splashHint.addEventListener("click", openInvitation);
+    envelope.addEventListener("click", openInvitation);
+  }
 
   /* ---------- Scroll progress ---------- */
   const bar = document.getElementById("scrollProgress");
