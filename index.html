@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f7efe2" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
   <title>محمد و مریم | کارت دعوت عروسی</title>
   <meta name="description" content="مفتخریم به میزبانی شما عزیزان در جشن عروسی محمد میرزایی و مریم نشاطی — ۳۱ شهریور ۱۴۰۵، تالار تچرا" />
 
@@ -138,6 +140,14 @@ body {
   animation: breathe 7s ease-in-out infinite;
 }
 @keyframes breathe { 0%,100%{transform:scale(1);opacity:.75} 50%{transform:scale(1.08);opacity:1} }
+
+.hero__logo {
+  position: relative; z-index: 1;
+  width: 82%; max-width: 340px; height: auto; display: block;
+  filter: drop-shadow(0 6px 16px rgba(150,110,40,.28));
+  animation: floatLogo 5.5s ease-in-out infinite;
+}
+@keyframes floatLogo { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-6px); } }
 
 .hero__art { width: 52%; max-width: 210px; overflow: visible; }
 .hero__art .art-leaves { fill: #aec293; stroke: #9fb27e; stroke-width: 2; stroke-linecap: round; }
@@ -296,6 +306,7 @@ body {
 
 /* ============ FOOTER ============ */
 .foot { text-align: center; position: relative; z-index: 2; }
+.foot__logo { width: 240px; max-width: 74%; height: auto; display: block; margin: 0 auto 8px; filter: drop-shadow(0 5px 14px rgba(150,110,40,.24)); }
 .foot__names { font-family: var(--f-calli); font-size: clamp(1.5rem, 7vw, 2.3rem); color: var(--gold-deep); }
 .foot__names span { color: var(--blush); }
 .foot__date { color: var(--ink-soft); font-weight: 500; margin-top: 2px; }
@@ -485,25 +496,9 @@ body.locked { overflow: hidden; }
     <header class="hero reveal" data-reveal>
       <div class="hero__arch">
         <!-- Swap this SVG scene for a real photo:  <img src="couple.jpg" alt="محمد و مریم" class="hero__photo"> -->
-        <div class="hero__scene" role="img" aria-label="حلقه‌های عروسی">
+        <div class="hero__scene" role="img" aria-label="محمد و مریم">
           <div class="hero__glow"></div>
-          <svg class="hero__art" viewBox="0 0 240 200" aria-hidden="true">
-            <!-- minimal leaf sprigs -->
-            <g class="art-leaves">
-              <path d="M120 150 C104 132 96 112 96 90"/>
-              <path d="M120 150 C136 132 144 112 144 90"/>
-              <ellipse cx="104" cy="116" rx="12" ry="4.6" transform="rotate(-42 104 116)"/>
-              <ellipse cx="136" cy="116" rx="12" ry="4.6" transform="rotate(42 136 116)"/>
-              <ellipse cx="100" cy="98" rx="9" ry="3.6" transform="rotate(-52 100 98)"/>
-              <ellipse cx="140" cy="98" rx="9" ry="3.6" transform="rotate(52 140 98)"/>
-            </g>
-            <!-- two interlocked rings -->
-            <g class="art-rings" transform="translate(120 108)">
-              <circle class="ring" cx="-17" cy="0" r="28"/>
-              <circle class="ring" cx="17" cy="0" r="28"/>
-              <path class="ring-spark" d="M17 -34 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z"/>
-            </g>
-          </svg>
+          <img class="hero__logo" src="logo.png" alt="محمد و مریم" draggable="false">
         </div>
       </div>
       <div class="hero__ornament" aria-hidden="true"><span class="rule"></span></div>
@@ -599,7 +594,7 @@ body.locked { overflow: hidden; }
     <div class="card__ornament" aria-hidden="true"><span class="rule"></span></div>
 
     <footer class="foot reveal" data-reveal>
-      <p class="foot__names">مریم <span aria-hidden="true">♡</span> محمد</p>
+      <img class="foot__logo" src="logo.png" alt="محمد و مریم" draggable="false">
       <p class="foot__date">۳۱ شهریور ۱۴۰۵</p>
     </footer>
 
