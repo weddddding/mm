@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#eceaea" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23f2f2f2'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23888' stroke-width='1.6'/%3E%3Cpath d='M32 20 L38 32 L32 44 L26 32 Z' fill='%23555'/%3E%3C/svg%3E" />
+  <title>صنم و امیرمحمد | کارت دعوت عروسی</title>
+  <meta name="description" content="مفتخریم به میزبانی شما عزیزان در جشن عروسی امیرمحمد محمودی و صنم واحدی — ۱۸ شهریور ۱۴۰۵" />
+
+  <!-- Persian fonts: Vazirmatn (body) + Gulzar (Nastaliq calligraphy for the names) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Gulzar&family=Lalezar&display=swap" rel="stylesheet" />
+
+  <style>
+/* ==========================================================================
+   صنم و امیرمحمد — Wedding Invitation
+   Style: monochrome (black · white · gray) · glassmorphism · soft neumorphism.
+   Pure CSS/JS. Single file.
+   ========================================================================== */
+
+:root {
+  /* palette — monochrome */
+  --paper:      #f3f2f2;
+  --paper-2:    #e6e5e5;
+  --ink:        #2c2c2e;      /* body text */
+  --ink-soft:   #66666a;
+  --silver:     #8e8e93;
+  --silver-deep:#4a4a4e;
+  --silver-soft:#c9c9ce;
+  --charcoal:   #3a3a3d;
+  --mist:       #b4b4b8;
+  --smoke:      #9a9a9f;
+
+  /* glass */
+  --glass-bg:     rgba(255, 255, 255, .50);
+  --glass-bg-2:   rgba(244, 244, 245, .34);
+  --glass-border: rgba(255, 255, 255, .70);
+  --glass-blur:   24px;
+
+  /* neumorphic soft (cool gray) */
+  --tile-bg:   linear-gradient(145deg, rgba(255,255,255,.62), rgba(228,228,230,.44));
+  --nm-light:  rgba(255, 255, 255, .85);
+  --nm-dark:   rgba(90, 90, 96, .18);
+
+  --radius: 20px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+
+  --f-body:  "Vazirmatn", system-ui, sans-serif;
+  --f-calli: "Gulzar", "Vazirmatn", serif;
+  --f-disp:  "Lalezar", "Vazirmatn", serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--f-body);
+  color: var(--ink);
+  line-height: 1.9;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(1100px 780px at 78% -8%,  #ffffff 0%, transparent 60%),
+    radial-gradient(900px 820px at -8% 108%,  #dedee0 0%, transparent 55%),
+    linear-gradient(165deg, #efefef 0%, #dcdcde 100%);
+  background-attachment: fixed;
+  padding: clamp(14px, 3vw, 48px) clamp(10px, 3vw, 40px);
+  display: flex;
+  justify-content: center;
+}
+
+/* ============ Background orbs (what the glass refracts) ============ */
+.bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.bg-orbs span {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); opacity: .55;
+  animation: drift 22s ease-in-out infinite;
+}
+.bg-orbs span:nth-child(1) { width: 46vw; height: 46vw; max-width: 460px; max-height: 460px; top: 4%;  left: 50%; margin-left: -220px; background: radial-gradient(circle, #ffffff, transparent 70%); opacity: .75; }
+.bg-orbs span:nth-child(2) { width: 50vw; height: 50vw; max-width: 500px; max-height: 500px; bottom: -6%; left: 38%; background: radial-gradient(circle, #c6c6ca, transparent 70%); opacity: .5; animation-delay: -7s; }
+.bg-orbs span:nth-child(3) { width: 40vw; height: 40vw; max-width: 420px; max-height: 420px; top: 34%; left: 46%; background: radial-gradient(circle, #a8a8ad, transparent 70%); opacity: .32; animation-delay: -13s; }
+@keyframes drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(2.5%, 3%) scale(1.08); }
+}
+
+/* ============ Scroll progress ============ */
+.scroll-progress {
+  position: fixed; inset: 0 auto auto 0;
+  height: 2px; width: 0; z-index: 60;
+  background: linear-gradient(90deg, var(--silver-soft), var(--charcoal));
+  transition: width .1s linear;
+}
+
+/* ============ Falling leaves (topmost, over splash + site) ============ */
+.petals { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+/* ============ The glass card ============ */
+.card {
+  position: relative;
+  width: min(660px, 100%);
+  z-index: 10;
+  background: linear-gradient(160deg, var(--glass-bg), var(--glass-bg-2));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  padding: clamp(24px, 5vw, 48px) clamp(20px, 5vw, 52px) clamp(30px, 6vw, 54px);
+  box-shadow:
+    0 26px 70px -26px rgba(60, 60, 65, .40),
+    inset 0 1px 0 rgba(255, 255, 255, .85),
+    inset 0 0 0 1px rgba(255, 255, 255, .22);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ============ HERO ============ */
+.hero { position: relative; z-index: 2; }
+.hero__arch {
+  position: relative;
+  width: 100%; aspect-ratio: 1 / 1.35;
+  border-radius: 50% 50% 26px 26px / 28% 28% 26px 26px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .65);
+  background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(230,230,232,.32));
+  -webkit-backdrop-filter: blur(6px) saturate(110%);
+  backdrop-filter: blur(6px) saturate(110%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 12px 28px -20px rgba(60,60,65,.5);
+}
+.hero__arch::after {
+  content: ""; position: absolute; inset: 9px; pointer-events: none;
+  border-radius: inherit; border: 1px solid rgba(255,255,255,.5);
+}
+/* the couple photo — desaturated to sit inside the monochrome palette */
+.hero__photo {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover; object-position: 50% 30%;
+  filter: grayscale(1) contrast(1.06) brightness(1.02);
+  -webkit-user-drag: none; user-select: none;
+}
+/* soft vignette so the photo melts into the arch instead of ending hard */
+.hero__veil {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(122% 82% at 50% 32%, transparent 54%, rgba(38,38,43,.18) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.18) 0%, transparent 20%, transparent 74%, rgba(255,255,255,.12) 100%);
+}
+/* ---- monogram medallion (replaces the couple logo image) ---- */
+.mono {
+  position: relative; z-index: 1;
+  width: min(74%, 300px); aspect-ratio: 1;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(90,90,96,.30);
+  animation: floatLogo 5.5s ease-in-out infinite;
+}
+.mono::before {
+  content: ""; position: absolute; inset: 9px;
+  border-radius: 50%; border: 1px dashed rgba(90,90,96,.28);
+}
+.mono::after {
+  content: ""; position: absolute; inset: -7px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.75);
+}
+.mono__inner { display: grid; place-items: center; gap: 4px; text-align: center; padding: 0 12%; }
+.mono__names {
+  font-family: var(--f-calli); font-weight: 400;
+  font-size: clamp(1.9rem, 8.5vw, 3rem);  
+  background: linear-gradient(100deg, #2a2a2e, #5f5f66 42%, #a5a5ac 52%, #34343a 66%, #2a2a2e);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: sheen 9s ease-in-out infinite;
+}
+.mono__rule { display: block; height: 1px; width: 62%; background: linear-gradient(90deg, transparent, rgba(90,90,96,.5), transparent); }
+.mono__sub { font-size: clamp(.7rem, 3vw, .86rem); color: var(--ink-soft); letter-spacing: .12em; margin-top: 4px; }
+@keyframes floatLogo { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-6px); } }
+.mono--sm { width: min(58%, 216px); margin: 0 auto 4px; animation: none; }
+.mono--sm .mono__names { font-size: clamp(1.35rem, 6vw, 1.9rem); }
+.mono--sm .mono__sub   { font-size: clamp(.62rem, 2.6vw, .74rem); margin-top: 2px; }
+
+/* ============ Minimal divider ============ */
+.hero__ornament, .card__ornament { display: grid; place-items: center; }
+.hero__ornament { margin: 22px 0 2px; }
+.card__ornament { margin: clamp(26px,6vw,42px) 0 14px; }
+.rule {
+  position: relative; display: block; height: 1px; width: min(230px, 58%);
+  background: linear-gradient(90deg, transparent, rgba(90,90,96,.55), transparent);
+}
+.rule::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 6px; height: 6px; transform: translate(-50%,-50%) rotate(45deg);
+  background: var(--charcoal); border-radius: 1px;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.6);
+}
+
+/* ============ NAMES ============ */
+.names { text-align: center; position: relative; z-index: 2; padding-top: 20px; }
+.names__row { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 5vw, 40px); }
+.names__name {
+  font-family: var(--f-calli);
+  font-size: clamp(3rem, 12.5vw, 5.4rem);
+  /* line-height: 1.55; font-weight: 400; */
+  background: linear-gradient(100deg, #1e1e22, #55555b 42%, #9d9da4 52%, #2b2b30 66%, #1e1e22);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: sheen 9s ease-in-out infinite;
+  padding: 0 .08em;
+}
+@keyframes sheen { 0%,100%{background-position:0 0} 50%{background-position:-100% 0} }
+.names__heart svg { fill: var(--silver); filter: drop-shadow(0 2px 3px rgba(60,60,65,.35)); animation: beat 2.4s ease-in-out infinite; }
+@keyframes beat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.18)} 30%{transform:scale(1)} 45%{transform:scale(1.1)} }
+.names__family {
+  display: flex; justify-content: center; gap: clamp(20px, 8vw, 64px);
+  font-size: clamp(1.02rem, 4.4vw, 1.42rem); font-weight: 500;
+  color: var(--charcoal); margin-top: 6px;
+}
+.names__amp { color: var(--silver); font-weight: 400; }
+
+/* ============ POEM ============ */
+.poem { text-align: center; margin: clamp(22px, 6vw, 38px) auto; position: relative; z-index: 2; }
+.poem__line { font-size: clamp(.98rem, 4vw, 1.3rem); font-weight: 400; color: var(--ink); line-height: 2.2; white-space: nowrap; }
+.poem__line--calli { font-family: var(--f-calli); color: var(--silver-deep); font-size: clamp(1.35rem, 6vw, 2rem); line-height: 2.6; }
+@media (max-width: 400px) { .poem__line { white-space: normal; } }
+
+/* ============ COUNTDOWN (neumorphic soft tiles) ============ */
+.countdown {
+  display: flex; align-items: center; justify-content: center; gap: clamp(6px, 2vw, 14px);
+  margin: 4px auto clamp(24px,6vw,38px); position: relative; z-index: 2;
+}
+.cd__unit {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: clamp(60px, 17vw, 86px);
+  padding: 14px 8px 10px;
+  background: var(--tile-bg);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 18px;
+  box-shadow: -6px -6px 14px var(--nm-light), 6px 6px 16px var(--nm-dark), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.cd__unit b {
+  font-family: var(--f-disp); font-weight: 400;
+  font-size: clamp(1.7rem, 7vw, 2.5rem); line-height: 1; color: var(--silver-deep);
+}
+.cd__unit b.flip { animation: flip .5s var(--ease); }
+@keyframes flip { 0%{transform:rotateX(0);opacity:1} 45%{transform:rotateX(-90deg);opacity:.2} 100%{transform:rotateX(0);opacity:1} }
+.cd__unit span { font-size: clamp(.7rem, 3vw, .84rem); color: var(--ink-soft); margin-top: 7px; }
+.cd__sep { width: 5px; height: 5px; border-radius: 50%; background: var(--mist); align-self: center; margin-top: 6px; opacity: .7; }
+
+/* ============ DETAILS ============ */
+.details {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  align-items: start; text-align: center;
+  margin: clamp(10px,4vw,20px) auto clamp(24px,6vw,40px);
+  max-width: 520px; position: relative; z-index: 2;
+}
+.detail { padding: 4px clamp(4px,2vw,10px); }
+.detail--mid { border-inline: 1px solid rgba(90,90,96,.24); }
+.detail__icon {
+  display: inline-grid; place-items: center; width: 60px; height: 60px; margin-bottom: 10px;
+  color: var(--silver-deep); border-radius: 50%;
+  background: var(--tile-bg);
+  box-shadow: -5px -5px 12px var(--nm-light), 5px 5px 12px var(--nm-dark), inset 0 1px 0 rgba(255,255,255,.7);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.detail__icon svg { width: 30px; height: 30px; }
+.detail:hover .detail__icon { transform: translateY(-3px); box-shadow: -6px -6px 15px var(--nm-light), 7px 7px 18px var(--nm-dark); }
+.detail__title { display: block; font-family: var(--f-disp); font-weight: 400; font-size: clamp(1.12rem, 5vw, 1.45rem); color: var(--charcoal); }
+.detail__text { font-size: clamp(.88rem, 3.8vw, 1.05rem); color: var(--ink); font-weight: 500; }
+
+/* ============ HOST LINE ============ */
+.host { text-align: center; margin: 4px auto clamp(18px,5vw,30px); position: relative; z-index: 2; }
+.host p { font-size: clamp(1.02rem, 4.4vw, 1.35rem); font-weight: 500; color: var(--charcoal); }
+.host__heart { display: inline-block; margin-top: 10px; }
+.host__heart svg { fill: var(--silver); animation: beat 2.4s ease-in-out .3s infinite; }
+
+/* ============ VENUE (glass panel) ============ */
+.venue { position: relative; z-index: 2; display: grid; place-items: center; }
+.venue__box {
+  position: relative; text-align: center;
+  width: min(440px, 100%); padding: clamp(22px,5vw,32px) clamp(18px,4vw,28px);
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(255,255,255,.55), rgba(230,230,232,.36));
+  border: 1px solid rgba(255,255,255,.6);
+  box-shadow: -7px -7px 18px var(--nm-light), 8px 8px 20px var(--nm-dark), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.venue__icon {
+  display: inline-grid; place-items: center; width: 64px; height: 64px; margin-bottom: 10px;
+  color: var(--silver-deep); border-radius: 50%;
+  background: var(--tile-bg);
+  box-shadow: inset 3px 3px 8px var(--nm-dark), inset -3px -3px 8px var(--nm-light);
+}
+.venue__icon svg { width: 34px; height: 34px; animation: bob 4.5s ease-in-out infinite; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.venue__name { font-family: var(--f-disp); font-weight: 400; font-size: clamp(1.55rem, 7vw, 2.2rem); color: var(--silver-deep); }
+.venue__addr { font-size: clamp(.9rem, 3.9vw, 1.05rem); color: var(--ink); font-weight: 500; margin-top: 2px; }
+
+.venue__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-radius: 999px; cursor: pointer;
+  font-family: var(--f-body); font-weight: 600; font-size: .96rem; text-decoration: none;
+  min-height: 44px; border: 1px solid rgba(255,255,255,.5);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s;
+}
+.btn__ic { width: 18px; height: 18px; }
+.btn--dark {
+  color: #fff;
+  background: linear-gradient(145deg, #6b6b71, #3d3d42 55%, #232327);
+  border-color: rgba(255,255,255,.22);
+  box-shadow: -3px -3px 8px rgba(255,255,255,.4), 5px 6px 16px rgba(50,50,55,.42), inset 0 1px 0 rgba(255,255,255,.28);
+  text-shadow: 0 1px 1px rgba(0,0,0,.35);
+}
+.btn--dark .btn__ic { stroke: #fff; }
+.btn--ghost {
+  color: var(--silver-deep);
+  background: var(--tile-bg);
+  box-shadow: -5px -5px 12px var(--nm-light), 5px 5px 12px var(--nm-dark), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.btn--ghost .btn__ic { stroke: var(--silver-deep); }
+.btn:hover { transform: translateY(-3px); }
+.btn--dark:hover { box-shadow: -3px -3px 8px rgba(255,255,255,.4), 8px 10px 22px rgba(50,50,55,.5); }
+.btn--ghost:hover { box-shadow: -6px -6px 15px var(--nm-light), 7px 7px 18px var(--nm-dark); }
+.btn:active { transform: translateY(0); box-shadow: inset 3px 3px 8px var(--nm-dark), inset -3px -3px 8px var(--nm-light); }
+.btn:focus-visible { outline: 3px solid rgba(90,90,96,.55); outline-offset: 3px; }
+
+/* ============ FOOTER ============ */
+.foot { text-align: center; position: relative; z-index: 2; }
+.foot__date { color: var(--ink-soft); font-weight: 500; margin-top: 2px; }
+
+/* ============ Reveal on scroll ============ */
+[data-reveal] { opacity: 0; transform: translateY(34px); }
+[data-reveal].is-in { opacity: 1; transform: none; transition: opacity .9s var(--ease), transform .9s var(--ease); }
+[data-stagger] { opacity: 0; transform: translateY(22px) scale(.97); }
+[data-stagger].is-in { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .7s var(--ease); }
+
+/* ============ Splash : two parting panels ============ */
+body.locked { overflow: hidden; }
+
+.splash {
+  position: fixed; inset: 0; z-index: 200;
+  overflow: hidden; cursor: pointer;
+  background: #e9e9ea;
+  transition: opacity .5s ease, visibility .5s;
+}
+.splash.revealing { opacity: 0; visibility: hidden; }
+
+/* the two side-by-side panels (feather artwork, desaturated to grayscale) */
+.doors { position: absolute; inset: 0; }
+.door {
+  position: absolute; top: 0; left: 0; line-height: 0;
+  width: 100vw; height: 100dvh;
+  transition: transform 1.6s cubic-bezier(.66, 0, .2, 1);
+  will-change: transform;
+}
+.door img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  filter: grayscale(1) contrast(1.04) brightness(1.03);
+  user-select: none; -webkit-user-drag: none;
+}
+/* both panels span the full screen and overlap; the transparent chevron
+   notch of the top (right) panel reveals the left panel beneath — so the
+   seam always meets no matter the viewport height */
+.door--left  { left: 0; }
+.door--right { left: 0; }
+
+/* centered hint / seal button straddling the seam */
+.door-hint {
+  position: absolute; left: 33.33%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3; display: grid; place-items: center; gap: 14px;
+  text-align: center; cursor: pointer;
+  transition: opacity .45s ease, transform .45s ease;
+}
+.door-hint__seal {
+  width: 173px; height: auto; display: block;
+  filter: grayscale(1) contrast(1.05) drop-shadow(0 8px 18px rgba(40,40,45,.35));
+  animation: hintPulse 2.4s ease-in-out infinite;
+  -webkit-user-drag: none; user-select: none;
+}
+.door-hint__text { font-size: 13px; color: var(--ink-soft); letter-spacing: .3px; }
+.door-hint:focus-visible { outline: 3px solid rgba(90,90,96,.55); outline-offset: 6px; border-radius: 12px; }
+@keyframes hintPulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.07); } }
+
+/* on open : panels part in opposite directions, hint fades */
+.doors.opening .door--left  { transform: translateX(-100%); }
+.doors.opening .door--right { transform: translateX(100%); }
+.doors.opening .door-hint   { opacity: 0; transform: translate(-50%, -50%) scale(.9); }
+
+/* ============ Music consent modal ============ */
+.music-modal {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center; padding: 24px;
+  background: rgba(35, 35, 38, .45);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: opacity .45s ease, visibility .45s;
+}
+.music-modal.hide { opacity: 0; visibility: hidden; }
+.music-modal__card {
+  width: min(360px, 100%); text-align: center;
+  padding: 32px 26px 28px;
+  background: linear-gradient(160deg, rgba(255,255,255,.95), rgba(240,240,242,.88));
+  border: 1px solid var(--glass-border); border-radius: 24px;
+  box-shadow: 0 26px 60px -20px rgba(50,50,55,.5), inset 0 1px 0 rgba(255,255,255,.9);
+  animation: mmIn .5s var(--ease) both;
+}
+@keyframes mmIn { from { opacity: 0; transform: translateY(18px) scale(.96); } to { opacity: 1; transform: none; } }
+.music-modal__note {
+  width: 58px; height: 58px; margin: 0 auto 14px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 26px; color: var(--silver-deep);
+  background: linear-gradient(145deg, #ffffff, #e4e4e6);
+  box-shadow: 0 6px 18px rgba(60,60,65,.24), inset 0 1px 0 rgba(255,255,255,.9);
+  animation: hintPulse 2.4s ease-in-out infinite;
+}
+.music-modal__title { font-family: var(--f-disp); font-size: 24px; color: var(--silver-deep); font-weight: 400; }
+.music-modal__text  { font-size: 14.5px; color: var(--ink-soft); margin: 8px 0 22px; line-height: 1.85; }
+.music-modal__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.music-modal__actions .btn { flex: 1 1 auto; justify-content: center; }
+
+/* ============ Music mute/unmute toggle ============ */
+.music-toggle {
+  position: fixed; left: 18px; bottom: 18px; z-index: 210;
+  width: 52px; height: 52px; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center;
+  color: var(--silver-deep); border: 1px solid var(--glass-border);
+  background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(232,232,234,.82));
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px -6px rgba(60,60,65,.4), inset 0 1px 0 rgba(255,255,255,.85);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  animation: mmIn .5s var(--ease) both;
+}
+.music-toggle:hover { transform: translateY(-2px); }
+.music-toggle:active { transform: translateY(0); }
+.music-toggle:focus-visible { outline: 3px solid rgba(90,90,96,.55); outline-offset: 3px; }
+.music-toggle svg { width: 22px; height: 22px; }
+.music-toggle .music-toggle__off { display: none; }
+.music-toggle.muted .music-toggle__on  { display: none; }
+.music-toggle.muted .music-toggle__off { display: block; }
+/* gentle pulsing ring while music plays */
+.music-toggle:not(.muted)::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(90,90,96,.4);
+  animation: mtRing 2.2s ease-out infinite;
+}
+@keyframes mtRing { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.35); opacity: 0; } }
+
+/* ============ Responsive ============ */
+@media (max-width: 420px) {
+  .details { gap: 0; }
+  .detail { padding-inline: 3px; }
+  .cd__sep { display: none; }
+  .countdown { gap: 7px; }
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  [data-reveal], [data-stagger] { opacity: 1 !important; transform: none !important; }
+  .petals, .bg-orbs span { display: none; }
+}
+  </style>
+</head>
+<body>
+
+  <!-- ===== Background music ===== -->
+  <audio id="bgm" src="../music/Arman-Garshasbi-Benshin.mp3" loop preload="auto"></audio>
+
+  <!-- ===== Music consent modal (shown first) ===== -->
+  <div class="music-modal" id="musicModal" role="dialog" aria-modal="true" aria-labelledby="mmTitle">
+    <div class="music-modal__card">
+      <div class="music-modal__note" aria-hidden="true">♪</div>
+      <h2 class="music-modal__title" id="mmTitle">با موسیقی همراه شوید</h2>
+      <p class="music-modal__text">این دعوت‌نامه همراه با موسیقی است. مایل به پخش آن هستید؟</p>
+      <div class="music-modal__actions">
+        <button class="btn btn--dark" id="mmYes" type="button">
+          <svg class="btn__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          با موسیقی
+        </button>
+        <button class="btn btn--ghost" id="mmNo" type="button">بی‌صدا</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Music mute/unmute toggle (bottom-left) ===== -->
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="کنترل موسیقی" hidden>
+    <svg class="music-toggle__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    <svg class="music-toggle__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+  </button>
+
+  <!-- ===== Splash : two parting panels ===== -->
+  <div class="splash" id="splash">
+    <div class="doors" id="doors">
+      <div class="door door--left"><img src="../left.webp" alt="" draggable="false"></div>
+      <div class="door door--right"><img src="../right.webp" alt="" draggable="false"></div>
+      <div class="door-hint" id="doorHint" role="button" tabindex="0" aria-label="باز کردن دعوت‌نامه">
+        <img class="door-hint__seal" src="../seal.webp" alt="" draggable="false">
+        <span class="door-hint__text">برای باز شدن لمس کنید</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scroll progress ===== -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ===== Soft blurred background orbs (glass refraction) ===== -->
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <!-- ===== Falling petals canvas ===== -->
+  <canvas id="petals" class="petals" aria-hidden="true"></canvas>
+
+  <main class="card" id="card">
+
+    <!-- ===== HERO : arched monogram ===== -->
+    <header class="hero reveal" data-reveal>
+      <div class="hero__arch">
+        <img class="hero__photo" src="pic.jpg" alt="صنم و امیرمحمد" draggable="false">
+        <span class="hero__veil" aria-hidden="true"></span>
+      </div>
+      <div class="hero__ornament" aria-hidden="true"><span class="rule"></span></div>
+    </header>
+
+    <!-- ===== NAMES ===== -->
+    <section class="names reveal" data-reveal>
+      <div class="names__row">
+        <h1 class="names__name" data-name>صنم</h1>
+        <span class="names__heart" aria-label="و">
+          <svg viewBox="0 0 32 29" width="30" height="27"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
+        </span>
+        <h1 class="names__name" data-name>امیرمحمد</h1>
+      </div>
+      <div class="names__family">
+        <span>واحدی</span>
+        <span class="names__amp" style="opacity: 0;">وو</span>
+        <span>محمودی</span>
+      </div>
+    </section>
+
+    <!-- ===== POEM ===== -->
+    <section class="poem reveal" data-reveal>
+      <p class="poem__line poem__line--calli">مطرب بگو که کارِ جهان شُد به کامِ ما</p>
+      <p class="poem__line">ما را در این عاشقانه همراه باشید...</p>
+    </section>
+
+    <!-- ===== COUNTDOWN ===== -->
+    <section class="countdown reveal" data-reveal aria-label="زمان باقی‌مانده تا جشن">
+      <div class="cd__unit"><b id="cd-days">۰</b><span>روز</span></div>
+      <div class="cd__unit"><b id="cd-hours">۰</b><span>ساعت</span></div>
+      <div class="cd__unit"><b id="cd-min">۰</b><span>دقیقه</span></div>
+      <div class="cd__unit"><b id="cd-sec">۰</b><span>ثانیه</span></div>
+    </section>
+
+    <!-- ===== DETAILS  (TODO: زمان و تاریخ مراسم را اینجا ویرایش کنید) ===== -->
+    <section class="details reveal" data-reveal>
+      <div class="detail" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-clock"/></svg></span>
+        <b class="detail__title">ساعت</b>
+        <p class="detail__text">۱۸ الی ۲۲</p>
+      </div>
+      <div class="detail detail--mid" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-calendar"/></svg></span>
+        <b class="detail__title">۱۸</b>
+        <p class="detail__text">شهریور ۱۴۰۵</p>
+      </div>
+      <div class="detail" data-stagger>
+        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-dish"/></svg></span>
+        <b class="detail__title">به صرف</b>
+        <p class="detail__text">شیرینی و شام</p>
+      </div>
+    </section>
+
+    <!-- ===== HOST LINE ===== -->
+    <section class="host reveal" data-reveal>
+      <p>مفتخریم به میزبانی شما عزیزان</p>
+      <span class="host__heart" aria-hidden="true">
+        <svg viewBox="0 0 32 29" width="20" height="18"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
+      </span>
+    </section>
+
+    <!-- ===== VENUE  (TODO: نام تالار، آدرس و لینک نقشه‌ها را ویرایش کنید) ===== -->
+    <section class="venue reveal" data-reveal>
+      <div class="venue__box">
+        <span class="venue__icon"><svg viewBox="0 0 48 48"><use href="#ic-hall"/></svg></span>
+        <h2 class="venue__name">تالار تچرا</h2>
+        <p class="venue__addr">اندیشه، فاز یک، میدان صیاد شیرازی</p>
+        <p class="venue__addr">نرسیده به میدان جعفریه</p>
+        <div class="venue__actions">
+          <a class="btn btn--dark" id="mapBtn" target="_blank" rel="noopener"
+             href="https://maps.app.goo.gl/gAYXdGD15n9fiQbu9">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            گوگل مپ
+          </a>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://nshn.ir/54rbvYw8IxLlO9">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            نشان
+          </a>
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://balad.ir/p/6AWBLNRySSi8y4">
+            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
+            بلد
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="card__ornament" aria-hidden="true"><span class="rule"></span></div>
+
+        <div class="mono__inner">
+          <span class="mono__names">صنم و امیرمحمد</span>
+          <span class="mono__rule"></span>
+          <span class="mono__sub">۱۸ شهریور ۱۴۰۵</span>
+        </div>
+
+
+  </main>
+
+  <!-- ===== SVG symbol library ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- icons -->
+      <g id="ic-clock" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="24" cy="24" r="16"/><path d="M24 15v9l6 4"/>
+      </g>
+      <g id="ic-calendar" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="12" width="30" height="27" rx="4"/><path d="M9 20h30M17 8v8M31 8v8"/>
+      </g>
+      <g id="ic-dish" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 30a14 8 0 0 1 28 0z"/><path d="M8 34h32"/><path d="M24 22V10M20 10c0 3 8 3 8 0"/>
+      </g>
+      <g id="ic-hall" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 40V20l14-9 14 9v20"/><path d="M6 40h36"/><rect x="20" y="28" width="8" height="12"/>
+        <path d="M16 20h2M30 20h2M16 26h2M30 26h2"/><path d="M24 11V6"/>
+      </g>
+      <g id="ic-pin" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22c5-5 8-8.5 8-12a8 8 0 1 0-16 0c0 3.5 3 7 8 12z"/><circle cx="12" cy="10" r="2.6"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script>
+/* ==========================================================================
+   صنم و امیرمحمد — interactions & animation
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const toFa = (n) => String(n).replace(/\d/g, (d) => faDigits[d]);
+
+  /* ---------- Music consent modal + mute/unmute toggle ---------- */
+  const bgm = document.getElementById("bgm");
+  const musicModal = document.getElementById("musicModal");
+  const musicToggle = document.getElementById("musicToggle");
+  const mmYes = document.getElementById("mmYes");
+  const mmNo = document.getElementById("mmNo");
+
+  if (musicModal && bgm) {
+    document.body.classList.add("locked"); // lock while the consent modal is up
+
+    const setMuted = (muted) => {
+      musicToggle.classList.toggle("muted", muted);
+      musicToggle.setAttribute("aria-label", muted ? "پخش موسیقی" : "قطع موسیقی");
+    };
+
+    const fadeIn = () => {
+      bgm.volume = 0;
+      let v = 0;
+      const t = setInterval(() => {
+        v = Math.min(1, v + 0.05); bgm.volume = v;
+        if (v >= 1) clearInterval(t);
+      }, 60);
+    };
+
+    const playMusic = () => {
+      const p = bgm.play();
+      if (p !== undefined) {
+        p.then(() => { setMuted(false); fadeIn(); }).catch(() => setMuted(true));
+      } else { setMuted(false); }
+    };
+
+    const closeModal = () => {
+      musicModal.classList.add("hide");
+      setTimeout(() => { musicModal.style.display = "none"; }, 500);
+      musicToggle.hidden = false; // reveal the bottom-left control
+    };
+
+    mmYes.addEventListener("click", () => { closeModal(); playMusic(); });
+    mmNo.addEventListener("click",  () => { closeModal(); setMuted(true); });
+
+    // bottom-left toggle: play/pause the looping track
+    musicToggle.addEventListener("click", () => {
+      if (bgm.paused) {
+        bgm.play().then(() => { setMuted(false); if (bgm.volume < 1) fadeIn(); }).catch(() => {});
+      } else {
+        bgm.pause();
+        setMuted(true);
+      }
+    });
+  }
+
+  /* ---------- Splash : two parting panels ---------- */
+  const splash = document.getElementById("splash");
+  const doors = document.getElementById("doors");
+  const doorHint = document.getElementById("doorHint");
+
+  if (splash) {
+    document.body.classList.add("locked"); // lock scroll until opened
+    let opened = false;
+
+    const finish = () => {
+      splash.classList.add("revealing");
+      document.body.classList.remove("locked");
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        splash.style.display = "none";
+        splash.setAttribute("aria-hidden", "true");
+      }, 700);
+    };
+
+    const openInvitation = () => {
+      if (opened) return;
+      opened = true;
+
+      if (reduce) { finish(); return; }
+      // the two panels part in opposite directions, revealing the site
+      doors.classList.add("opening");
+      // once they've slid away, clean up the splash
+      setTimeout(finish, 1600);
+    };
+
+    // tap anywhere on the screen to open
+    splash.addEventListener("click", openInvitation);
+    doorHint.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openInvitation(); }
+    });
+  }
+
+  /* ---------- Scroll progress ---------- */
+  const bar = document.getElementById("scrollProgress");
+  const onScroll = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  };
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Reveal on scroll ---------- */
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("is-in");
+        // stagger children
+        const kids = e.target.querySelectorAll("[data-stagger]");
+        kids.forEach((k, i) => setTimeout(() => k.classList.add("is-in"), i * 140));
+        io.unobserve(e.target);
+      });
+    },
+    { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+  );
+  document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+
+  /* ---------- Countdown to the wedding (TODO: تاریخ مراسم) ---------- */
+  const target = new Date("2026-09-09T18:00:00+03:30").getTime();
+  const els = {
+    days: document.getElementById("cd-days"),
+    hours: document.getElementById("cd-hours"),
+    min: document.getElementById("cd-min"),
+    sec: document.getElementById("cd-sec"),
+  };
+  const last = {};
+  function setUnit(el, val) {
+    const s = toFa(val);
+    if (el.textContent === s) return;
+    el.textContent = s;
+    if (!reduce) {
+      el.classList.remove("flip");
+      void el.offsetWidth; // reflow to restart animation
+      el.classList.add("flip");
+    }
+  }
+  function tick() {
+    let diff = Math.max(0, target - Date.now());
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000);  diff -= h * 3600000;
+    const m = Math.floor(diff / 60000);    diff -= m * 60000;
+    const s = Math.floor(diff / 1000);
+    if (last.d !== d) { setUnit(els.days, d); last.d = d; }
+    if (last.h !== h) { setUnit(els.hours, h); last.h = h; }
+    if (last.m !== m) { setUnit(els.min, m); last.m = m; }
+    if (last.s !== s) { setUnit(els.sec, s); last.s = s; }
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ---------- Falling leaves & blossoms (monochrome) ---------- */
+  if (!reduce) {
+    const canvas = document.getElementById("petals");
+    const ctx = canvas.getContext("2d");
+    let W, H, dpr = 1, items;
+
+    // Abstract sprites in the monochrome palette (self-contained SVG)
+    const SVGS = [
+      // gray leaf with midrib
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 3C31 12 31 27 20 37 9 27 9 12 20 3Z' fill='#b6b6ba'/><path d='M20 6v28' stroke='#87878c' stroke-width='1.5' fill='none' stroke-linecap='round'/><path d='M20 16l6-4M20 22l-6-4M20 27l6-3' stroke='#87878c' stroke-width='1' fill='none' stroke-linecap='round'/></svg>`,
+      // lighter tilted leaf
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M7 33C7 17 19 6 34 8 33 23 22 34 7 33Z' fill='#cfcfd3'/><path d='M11 30C18 22 27 14 32 11' stroke='#9a9a9f' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>`,
+      // 5-petal light-gray blossom, dark center
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#d8d8dc'><ellipse cx='20' cy='11' rx='5.4' ry='9'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(72 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(144 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(216 20 20)'/><ellipse cx='20' cy='11' rx='5.4' ry='9' transform='rotate(288 20 20)'/></g><circle cx='20' cy='20' r='4.4' fill='#7d7d82'/></svg>`,
+      // 5-petal white blossom, gray center
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#f2f2f4'><ellipse cx='20' cy='12' rx='5' ry='8.4'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(72 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(144 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(216 20 20)'/><ellipse cx='20' cy='12' rx='5' ry='8.4' transform='rotate(288 20 20)'/></g><circle cx='20' cy='20' r='4' fill='#9a9a9f'/></svg>`,
+      // small 6-petal mid-gray flower
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='#a8a8ae'><ellipse cx='20' cy='13' rx='4' ry='7.5'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(60 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(120 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(180 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(240 20 20)'/><ellipse cx='20' cy='13' rx='4' ry='7.5' transform='rotate(300 20 20)'/></g><circle cx='20' cy='20' r='3.4' fill='#f2f2f4'/></svg>`,
+      // abstract rose swirl (silver)
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='13' fill='#dcdce0'/><path d='M20 12a8 8 0 1 1-7 4M20 15a5 5 0 1 1-4 2.4' fill='none' stroke='#84848a' stroke-width='1.5' stroke-linecap='round'/></svg>`,
+    ];
+    const sprites = SVGS.map((s) => {
+      const img = new Image();
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(s);
+      return img;
+    });
+
+    function resize() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(38, Math.round(W / 34));
+      items = Array.from({ length: count }, makeItem);
+    }
+    function makeItem() {
+      const flower = Math.random() < 0.42;               // ~mix of leaves & flowers
+      const sprite = flower ? 2 + ((Math.random() * 4) | 0) : ((Math.random() * 2) | 0);
+      return {
+        x: Math.random() * W,
+        y: Math.random() * -H,
+        size: (flower ? 16 : 15) + Math.random() * (flower ? 16 : 14),
+        sprite,
+        sway: 0.7 + Math.random() * 1.4,
+        speed: 0.28 + Math.random() * 0.6,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.035,
+        phase: Math.random() * Math.PI * 2,
+        opacity: 0.7 + Math.random() * 0.28,
+      };
+    }
+    function frame(t) {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of items) {
+        p.y += p.speed;
+        p.x += Math.sin(t * 0.001 + p.phase) * p.sway * 0.5;
+        p.angle += p.spin;
+        if (p.y > H + 28) { p.y = -28; p.x = Math.random() * W; }
+        const img = sprites[p.sprite];
+        if (!img.complete || !img.naturalWidth) continue;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.globalAlpha = p.opacity;
+        ctx.drawImage(img, -p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      }
+      requestAnimationFrame(frame);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    requestAnimationFrame(frame);
+  }
+})();
+  </script>
+</body>
+</html>
