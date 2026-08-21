@@ -209,6 +209,11 @@ body {
   padding: 0 .08em;
 }
 @keyframes sheen { 0%,100%{background-position:0 0} 50%{background-position:-100% 0} }
+.names__and {
+  font-family: var(--f-calli); color: var(--clay);
+  font-size: clamp(1.9rem, 7.5vw, 3.2rem); line-height: 1;
+  align-self: center; padding-bottom: .18em;
+}
 .names__heart svg { fill: var(--blush); filter: drop-shadow(0 2px 3px rgba(160,118,110,.35)); animation: beat 2.4s ease-in-out infinite; }
 @keyframes beat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.18)} 30%{transform:scale(1)} 45%{transform:scale(1.1)} }
 .names__family {
@@ -249,13 +254,13 @@ body {
 
 /* ============ DETAILS ============ */
 .details {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(2, 1fr);
   align-items: start; text-align: center;
   margin: clamp(10px,4vw,20px) auto clamp(24px,6vw,40px);
   max-width: 520px; position: relative; z-index: 2;
 }
 .detail { padding: 4px clamp(4px,2vw,10px); }
-.detail--mid { border-inline: 1px solid rgba(167,115,92,.28); }
+.detail--mid { border-inline-start: 1px solid rgba(167,115,92,.28); }
 .detail__icon {
   display: inline-grid; place-items: center; width: 60px; height: 60px; margin-bottom: 10px;
   color: var(--clay-deep); border-radius: 50%;
@@ -294,6 +299,18 @@ body {
 @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 .venue__name { font-family: var(--f-disp); font-weight: 400; font-size: clamp(1.55rem, 7vw, 2.2rem); color: var(--clay-deep); }
 .venue__addr { font-size: clamp(.9rem, 3.9vw, 1.05rem); color: var(--ink); font-weight: 500; margin-top: 2px; }
+
+/* ============ NOTE ============ */
+.note { position: relative; z-index: 2; display: grid; place-items: center; margin: clamp(16px,4vw,24px) auto 0; }
+.note__box {
+  width: min(440px, 100%); text-align: center;
+  padding: clamp(14px,3.5vw,18px) clamp(16px,4vw,24px);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255,255,255,.42), rgba(238,226,220,.3));
+  border: 1px dashed rgba(167,115,92,.38);
+}
+.note__title { display: block; font-family: var(--f-disp); font-weight: 400; color: var(--clay-deep); font-size: clamp(1.05rem, 4.6vw, 1.3rem); margin-bottom: 6px; }
+.note__text { font-size: clamp(.9rem, 3.9vw, 1.05rem); color: var(--ink); font-weight: 500; line-height: 1.95; }
 
 .venue__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px; }
 .btn {
@@ -523,22 +540,14 @@ body.locked { overflow: hidden; }
     <section class="names reveal" data-reveal>
       <div class="names__row">
         <h1 class="names__name" data-name>صنم</h1>
-        <span class="names__heart" aria-label="و">
-          <svg viewBox="0 0 32 29" width="30" height="27"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
-        </span>
+        <span class="names__and" aria-hidden="true">و</span>
         <h1 class="names__name" data-name>امیرمحمد</h1>
-      </div>
-      <div class="names__family">
-        <span>واحدی</span>
-        <span class="names__amp" style="opacity: 0;">وو</span>
-        <span>محمودی</span>
       </div>
     </section>
 
     <!-- ===== POEM ===== -->
     <section class="poem reveal" data-reveal>
       <p class="poem__line poem__line--calli">مطرب بگو که کارِ جهان شُد به کامِ ما</p>
-      <p class="poem__line">ما را در این عاشقانه همراه باشید...</p>
     </section>
 
     <!-- ===== COUNTDOWN ===== -->
@@ -553,24 +562,18 @@ body.locked { overflow: hidden; }
     <section class="details reveal" data-reveal>
       <div class="detail" data-stagger>
         <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-clock"/></svg></span>
-        <b class="detail__title">ساعت</b>
-        <p class="detail__text">۱۸ الی ۲۲</p>
+        <b class="detail__title">از ساعت</b>
+        <p class="detail__text">۱۸</p>
       </div>
       <div class="detail detail--mid" data-stagger>
         <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-calendar"/></svg></span>
         <b class="detail__title">۱۸</b>
         <p class="detail__text">شهریور ۱۴۰۵</p>
       </div>
-      <div class="detail" data-stagger>
-        <span class="detail__icon"><svg viewBox="0 0 48 48"><use href="#ic-dish"/></svg></span>
-        <b class="detail__title">به صرف</b>
-        <p class="detail__text">شیرینی و شام</p>
-      </div>
     </section>
 
     <!-- ===== HOST LINE ===== -->
     <section class="host reveal" data-reveal>
-      <p>مفتخریم به میزبانی شما عزیزان</p>
       <span class="host__heart" aria-hidden="true">
         <svg viewBox="0 0 32 29" width="20" height="18"><path d="M16 29S2 19.6 2 10.2C2 5.1 6 2 9.7 2c2.6 0 4.6 1.4 6.3 3.6C17.7 3.4 19.7 2 22.3 2 26 2 30 5.1 30 10.2 30 19.6 16 29 16 29z"/></svg>
       </span>
@@ -580,26 +583,26 @@ body.locked { overflow: hidden; }
     <section class="venue reveal" data-reveal>
       <div class="venue__box">
         <span class="venue__icon"><svg viewBox="0 0 48 48"><use href="#ic-hall"/></svg></span>
-        <h2 class="venue__name">تالار تچرا</h2>
-        <p class="venue__addr">اندیشه، فاز یک، میدان صیاد شیرازی</p>
-        <p class="venue__addr">نرسیده به میدان جعفریه</p>
+        <h2 class="venue__name">باغ بهشت</h2>
         <div class="venue__actions">
           <a class="btn btn--clay" id="mapBtn" target="_blank" rel="noopener"
-             href="https://maps.app.goo.gl/gAYXdGD15n9fiQbu9">
+             href="https://maps.app.goo.gl/U3NVF6UM21YEYV3D9">
             <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
             گوگل مپ
           </a>
           <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://nshn.ir/54rbvYw8IxLlO9">
+             href="https://nshn.ir/2bvdVP0x7hQf">
             <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
             نشان
           </a>
-          <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://balad.ir/p/6AWBLNRySSi8y4">
-            <svg viewBox="0 0 24 24" class="btn__ic"><use href="#ic-pin"/></svg>
-            بلد
-          </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== NOTE ===== -->
+    <section class="note reveal" data-reveal>
+      <div class="note__box">
+        <p class="note__text">از فرشته‌های کوچولو در فرصتی دیگه پذیرایی می‌شود</p>
       </div>
     </section>
 
